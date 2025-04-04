@@ -346,7 +346,7 @@
 
 - (void)lscrobble:(NSString *)title artist:(NSString *)artist album:album pos:(float)pos scrobbling:(bool)isscrobbling {
     [_lmanager.requestSerializer setValue:[NSString stringWithFormat:@"Token %@", [SAMKeychain passwordForService:[NSString stringWithFormat:@"%@ - ListenBrainz", NSBundle.mainBundle.infoDictionary[@"CFBundleName"]] account:@"defaultAccount"]] forHTTPHeaderField:@"Authorization"];
-    [_lmanager POST:@"https://api.listenbrainz.org/1/submit-listens" parameters:@{@"listen_type" : isscrobbling ? @"single" : @"playing_now", @"payload" : isscrobbling ? @[@{@"listened_at" : @(NSDate.date.timeIntervalSince1970), @"track_metadata" : @{@"artist_name" : artist, @"track_name" : title, @"release_name" : album }}] : @[@{@"track_metadata" : @{@"artist_name" : artist, @"track_name" : title, @"release_name" : album }}]} progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
+    [_lmanager POST:@"http://localhost:3000/lbz/1/submit-listens" parameters:@{@"listen_type" : isscrobbling ? @"single" : @"playing_now", @"payload" : isscrobbling ? @[@{@"listened_at" : @(NSDate.date.timeIntervalSince1970), @"track_metadata" : @{@"artist_name" : artist, @"track_name" : title, @"release_name" : album }}] : @[@{@"track_metadata" : @{@"artist_name" : artist, @"track_name" : title, @"release_name" : album }}]} progress:nil success:^(NSURLSessionDataTask * _Nonnull task, id  _Nullable responseObject) {
         if (isscrobbling) {
             NSLog(@"Scrobble Successful: %@ - %@", title, artist);
             _queuedtrack.scrobbled = YES;
